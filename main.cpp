@@ -89,6 +89,32 @@ void printExpression(vector<string>& expression) {
     cout << endl;
 }
 
+double evaluatePostfix(vector<string> &postfix){
+    stack<double> nilai;
+    for(auto &post : postfix){
+        if( (post[0]>='0' && post[0]<='9') || (post[0]=='-' && post.length()>1 ) ){
+            nilai.push(stod(post));
+        }else{
+            double num2 = nilai.top();  
+            nilai.pop();
+            double num1 = nilai.top();
+            nilai.pop();
+
+            if(post == "+"){
+                nilai.push(num1+num2);
+            }else if(post == "-"){
+                nilai.push(num1-num2);
+            }else if(post == "*"){
+                nilai.push(num1*num2);
+            }else if(post == "/"){
+                nilai.push(num1/num2);
+            }
+        }
+    }
+
+    return nilai.top();
+}
+
 int main() {
     string inputString;
     getline(cin, inputString);
@@ -96,7 +122,13 @@ int main() {
     vector<string> expression = strToInfix(inputString);
     vector<string> finalExpression = handleNegative(expression);
     vector<string> postfixExpression = infixToPostfix(finalExpression);
+    cout << "Infix : ";
+    printExpression(finalExpression);
+
+    cout << "Postfix : ";
     printExpression(postfixExpression);
+
+    cout <<"Value : " << evaluatePostfix(postfixExpression);
 
     return 0;
 }
