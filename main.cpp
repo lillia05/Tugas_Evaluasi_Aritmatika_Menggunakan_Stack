@@ -45,6 +45,36 @@ vector<string> handleNegative(vector<string>& expression) {
     return result;
 }
 
+vector<string> infixToPostfix(vector<string>& infix){
+    vector<string> postfix;
+    stack<string> opStack;
+    
+    for(auto& token : infix){
+        if((token[0] >= '0' && token[0] <='9') || (token[0] == '-' && token.length() > 1)){
+            postfix.push_back(token);
+        }else if(token == "("){
+            opStack.push(token);
+        }else if(token == ")"){
+            while(!opStack.empty() && opStack.top() != "("){
+                postfix.push_back(opStack.top());
+                opStack.pop();
+            }
+            opStack.pop();
+        }else{
+            while(!opStack.empty() && precedence(opStack.top()) >= precedence(token)){
+                postfix.push_back(opStack.top());
+                opStack.pop();
+            }
+            opStack.push(token);
+        }
+    }
+    while(!opStack.empty()){
+        postfix.push_back(opStack.top());
+        opStack.pop();
+    }
+    return postfix;
+}
+
 void printExpression(vector<string>& expression) {
     for (auto& token : expression) {
         cout << token << " ";
@@ -58,7 +88,8 @@ int main() {
 
     vector<string> expression = strToInfix(inputString);
     vector<string> finalExpression = handleNegative(expression);
-    printExpression(finalExpression);
+    vector<string> postfixExpression = infixToPostfix(finalExpression);
+    printExpression(postfixExpression);
 
     return 0;
 }
