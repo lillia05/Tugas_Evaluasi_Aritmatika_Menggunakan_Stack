@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stack>
 using namespace std;
 
 vector<string> strToInfix(string& inputString) {
@@ -44,6 +45,11 @@ vector<string> handleNegative(vector<string>& expression) {
 
     return result;
 }
+int precedence(string op){
+    if(op == "+" || op == "-") return 1;
+    if(op == "*" || op == "/") return 2;
+    return 0;
+}
 
 vector<string> infixToPostfix(vector<string>& infix){
     vector<string> postfix;
@@ -74,6 +80,7 @@ vector<string> infixToPostfix(vector<string>& infix){
     }
     return postfix;
 }
+
 
 void printExpression(vector<string>& expression) {
     for (auto& token : expression) {
